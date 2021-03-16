@@ -124,6 +124,10 @@ func Rectangle(width, height float64) *Path {
 // Circle returns a circle 'path' centered
 // at origin with a given radius and number of vertices.
 func Circle(radius float64, vertices int) *Path {
+	if vertices < 5 {
+		vertices = 5
+	}
+
 	res := &Path{
 		points: make([]*Point, vertices),
 	}

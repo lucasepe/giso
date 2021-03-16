@@ -2,6 +2,7 @@ package giso
 
 import (
 	"math"
+	"sort"
 )
 
 type Shape struct {
@@ -77,45 +78,10 @@ func (sh *Shape) RotateZ(origin *Point, angle float64) *Shape {
 	return res
 }
 
-/*
 func (sh *Shape) orderedPaths() []*Path {
 	sort.Slice(sh.paths, func(i, j int) bool {
-		return sh.paths[i].Depth() < sh.paths[j].Depth()
+		return sh.paths[i].Depth() > sh.paths[j].Depth()
 	})
-
-	return sh.paths
-}
-*/
-
-func (sh *Shape) orderedPaths() []*Path {
-	depths := make([]float64, len(sh.paths))
-	for i, el := range sh.paths { //0; i < len(depths); i++ {
-		depths[i] = el.Depth()
-	}
-
-	var swapped = true
-	var j = 0
-	var tmp *Path
-	var tmp2 float64
-	for {
-		swapped = false
-		j++
-		for i := 0; i < len(sh.paths)-j; i++ {
-			if depths[i] < depths[i+1] {
-				tmp = sh.paths[i]
-				tmp2 = depths[i]
-				sh.paths[i] = sh.paths[i+1]
-				depths[i] = depths[i+1]
-				sh.paths[i+1] = tmp
-				depths[i+1] = tmp2
-				swapped = true
-			}
-		}
-
-		if !swapped {
-			break
-		}
-	}
 
 	return sh.paths
 }
@@ -276,22 +242,22 @@ func Cylinder(radius, height float64, vertices int) *Shape {
 	return Extrude(circle, height)
 }
 
-func Octahedron(origin *Point) *Shape {
-	center := origin.Translate(0.5, 0.5, 0.5)
+func Octahedron() *Shape {
+	center := &Point{0.5, 0.5, 0.5}
 
 	upperTriangle := &Path{
 		points: []*Point{
-			origin.Translate(0.0, 0.0, 0.5),
-			origin.Translate(0.5, 0.5, 1.0),
-			origin.Translate(0.0, 1.0, 0.5),
+			{0.0, 0.0, 0.5},
+			{0.5, 0.5, 1.0},
+			{0.0, 1.0, 0.5},
 		},
 	}
 
 	lowerTriangle := &Path{
 		points: []*Point{
-			origin.Translate(0.0, 0.0, 0.5),
-			origin.Translate(0.0, 1.0, 0.5),
-			origin.Translate(0.5, 0.5, 0.0),
+			{0.0, 0.0, 0.5},
+			{0.0, 1.0, 0.5},
+			{0.5, 0.5, 0.0},
 		},
 	}
 
